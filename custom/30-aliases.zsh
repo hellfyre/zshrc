@@ -36,3 +36,5 @@ alias rscp="nocorrect rsync -aP --no-whole-file --inplace"
 alias rsmv="nocorrect rscp --remove-source-files"
 
 alias qum='quvi -e-r -e-v "URL" --exec "echo %t" --exec "mplayer %u"'
+
+alias syslog='tail -f /var/log/syslog'
