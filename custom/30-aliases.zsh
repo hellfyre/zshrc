@@ -28,7 +28,7 @@ alias history='fc -l 1'
 # some more ls aliases
 alias ls='ls --color=auto -h'
 alias ll='ls -l -h'
-alias la='ls -A'
+alias la='ls -lA'
 alias l='ls -CF'
 
 # rsync
@@ -38,3 +38,4 @@ alias rsmv="nocorrect rscp --remove-source-files"
 alias qum='quvi -e-r -e-v "URL" --exec "echo %t" --exec "mplayer %u"'
 
 alias syslog='tail -f /var/log/syslog'
+alias go='gnome-open'
