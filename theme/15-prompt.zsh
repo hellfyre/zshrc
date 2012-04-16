@@ -7,8 +7,7 @@ setopt promptsubst
 # bunch of custom hostname colors. for most, t2cc works just fine. :)
 typeset -A hostcolors
 hostcolors=(
-    fluttershy $FG[229]
-    SteelHooves $FG[245]
+    chaos $FG[245]
     )
 
 
