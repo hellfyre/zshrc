@@ -1,26 +1,10 @@
 unsetopt menu_complete
 setopt auto_menu complete_in_word always_to_end
 
-autoload -U compinit
-compinit -i
-
 zmodload -i zsh/complist
 
-## case-insensitive (all),partial-word and then substring completion
-if [ "x$CASE_SENSITIVE" = "xtrue" ]; then
-  zstyle ':completion:*' matcher-list 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-  unset CASE_SENSITIVE
-else
-  zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-fi
-
-zstyle ':completion:*' list-colors ''
-
-# Load known hosts file for auto-completion with ssh and scp commands
-if [ -f ~/.ssh/known_hosts ]; then
-  zstyle ':completion:*' hosts $( sed 's/[, ].*$//' $HOME/.ssh/known_hosts )
-  zstyle ':completion:*:*:(ssh|scp):*:*' hosts `sed 's/^\([^ ,]*\).*$/\1/' ~/.ssh/known_hosts`
-fi
+autoload -U compinit
+compinit -i
 
 # completion stuff
 zstyle ':completion::complete:*' use-cache on
@@ -66,6 +50,9 @@ zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
 # on processes completion complete all user processes
 # zstyle ':completion:*:processes' command 'ps -au$USER'
 
+# x11 colors
+zstyle ":completion:*:colors" path '/etc/X11/rgb.txt'
+
 ## add colors to processes for kill completion
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 
@@ -95,3 +82,33 @@ zle -C complete-history complete-word _generic
 zstyle ':completion:complete-history:*' completer _history
 
 zstyle ':complete-recent-args' use-histbang yes
+
+() {
+
+    local -a coreutils
+    coreutils=(
+        # /bin
+        cat chgrp chmod chown cp date dd df dir ln ls mkdir mknod mv readlink
+        rm rmdir vdir sleep stty sync touch uname mktemp
+        # /usr/bin
+        install hostid nice who users pinky stdbuf base64 basename chcon cksum
+        comm csplit cut dircolors dirname du env expand factor fmt fold groups
+        head id join link logname md5sum mkfifo nl nproc nohup od paste pathchk
+        pr printenv ptx runcon seq sha1sum sha224sum sha256sum sha384sum
+        sha512sum shred shuf sort split stat sum tac tail tee timeout tr
+        truncate tsort tty unexpand uniq unlink wc whoami yes arch touch
+    )
+
+    for i in $coreutils; do
+        # all which don't already have one
+        # at time of this writing, those are:
+        # /bin
+        #   chgrp chmod chown cp date dd df ln ls mkdir rm rmdir stty sync
+        #   touch uname
+        # /usr/bin
+        #   nice comm cut du env groups id join logname md5sum nohup printenv
+        #   sort stat unexpand uniq whoami
+        (( $+_comps[$i] )) || compdef _gnu_generic $i 
+    done
+
+}

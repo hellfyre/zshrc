@@ -1,0 +1,130 @@
+zmodload -i zsh/parameter || return 1
+# vim: set filetype=zsh
+
+prompt_valodim_help () {
+    setopt localoptions nocshnullcmd noshnullcmd
+    [[ $ZSH_VERSION < 5.0.0 ]] &&
+	print 'Requires ZSH_VERSION 5.0.0'$'\n'
+    <<-\EOF
+        My basic prompt. Not too fancy, but not too plain either. I used, loved
+        and tinkered on it for quite some time.
+
+        The RPROMPT is empty.
+	EOF
+}
+
+prompt_valodim_vcsstyles () {
+
+    local FMT_BRANCH FMT_ACTION FMT_PATH
+
+    # set formats
+    FMT_BRANCH="%f%%b%b%u%c" # e.g. master¹²
+    FMT_ACTION="(%F{cyan}%a%f"   # e.g. (rebase-i)
+    FMT_PATH="%F{green}%R/%%F{yellow}%S"              # e.g. ~/repo/subdir
+
+    zstyle ':vcs_info:*' enable git svn darcs bzr hg
+
+    zstyle ':vcs_info:*:valodim:*' unstagedstr '¹'  # display ¹ if there are unstaged changes
+    zstyle ':vcs_info:*:valodim:*' stagedstr '²'    # display ² if there are staged changes
+
+    # non-vcs
+    zstyle ':vcs_info:*:valodim:*' nvcsformats   "%F{green}%3~%f »"
+
+    # generic vcs
+    zstyle ':vcs_info:*:valodim:*' formats         "${FMT_PATH} ${FMT_BRANCH} %s »"
+    zstyle ':vcs_info:*:valodim:*' actionformats   "${FMT_PATH} ${FMT_BRANCH}${FMT_ACTION} %s »"
+
+    # special hg stuff
+    zstyle ':vcs_info:hg:valodim:*'  formats       "${FMT_PATH} ${FMT_BRANCH} ☿"
+    zstyle ':vcs_info:hg:valodim:*' actionformats  "${FMT_PATH} ${FMT_BRANCH}${FMT_ACTION} ☿"
+
+    # special git stuff
+    zstyle ':vcs_info:git:valodim:*' formats       "${FMT_PATH} ${FMT_BRANCH} %m%f±"
+    zstyle ':vcs_info:git:valodim:*' actionformats "${FMT_PATH} ${FMT_BRANCH}${FMT_ACTION} %m%f±"
+
+    # lofi formats. see ../custom/96-vcs_info-lofi.zsh
+    zstyle ':vcs_info:*:valodim:*'   lofiformats   "${FMT_PATH} %f%s »"
+    zstyle ':vcs_info:hg:valodim:*'  lofiformats   "${FMT_PATH} %f☿"
+    zstyle ':vcs_info:git:valodim:*' lofiformats   "${FMT_PATH} %f±"
+
+    # see ../custom/96-vcs_info-githooks.zsh
+    # tracking formats: behind, ahead and seperator
+    zstyle ':vcs_info:git:valodim:*' trackingformats "%%F{green}+%a%%f" "%%F{red}-%b%%f" "%%F{green}+%a% / %f%%F{red}-%b%%f"
+
+    # stash format
+    zstyle ':vcs_info:git:valodim:*' stashformat "%%F{243}%s "
+
+}
+
+prompt_valodim_precmd () {
+    setopt localoptions noksharrays unset
+
+    if [[ -w $PWD ]]; then
+        prompt_bits="%B%F{blue}"
+    elif [[ -r $PWD ]]; then
+        prompt_bits="%B%F{yellow}"
+    else
+        prompt_bits="%B%F{red}"
+    fi
+    [[ -O $PWD ]] && prompt_bits+=":" || prompt_bits+="."
+
+    # add info about localhist status
+    # note this looks default if no localhist specific stuff happens at all
+    [[ -z $localhist ]] && prompt_bits+="%F{blue}" || prompt_bits+="%F{cyan}"
+    [[ -z $localhist_disable ]] && prompt_bits+=":" || prompt_bits+="."
+
+    vcs_info 'valodim'
+}
+
+prompt_valodim_ps1 () {
+    setopt localoptions noksharrays extendedglob
+
+    local host_color
+    if ! zstyle -s ":prompt:valodim:ps1:${HOST}" host-color host_color; then
+        # get a number from the sha1 hash of the hostname
+        host_color=${${"$(sha1sum <<< $HOST)"//[a-z]#/}[1,14]}
+        # divide by 256/88/8/whatever
+        host_color=$(( host_color % $(echoti colors) ))
+    fi
+
+    # hide username if it's my regular one (anyone else might wanna change this)
+    local user=""
+    if ! zstyle -t ':prompt:valodim:ps1' hide-user; then
+      user="%(!.%F{red}root%f@.%n@)"
+    fi
+
+    local host="%F{${host_color}%}%M%f%b%u%k"
+    local shlvl="%(4L.%L .)"
+    local exstat="%(1j. %B%F{green}%j.)"
+    local jobstat="%(?..%B%F{red}%?)"
+
+    local gitinfo='${${vcs_info_msg_0_%%.}/$HOME/~}'
+
+    prompt_bits="%B%F{blue}::"
+
+    PROMPT="[${user}${host}] ${shlvl}\${prompt_bits}${jobstat}${exstat} $gitinfo %b%f"
+}
+
+prompt_valodim_setup () {
+    setopt localoptions noksharrays unset
+
+    # load zsh/termcap
+    zmodload zsh/terminfo
+
+    # load vcs_info styles
+    autoload -Uz vcs_info
+    prompt_valodim_vcsstyles 
+
+    # set up left-side prompt
+    prompt_valodim_ps1
+
+    # we know add-zsh-hook has been loaded by promptinit
+    add-zsh-hook precmd prompt_valodim_precmd
+
+    # no multiline so we don't need cr, but we do need both % and $ expansion
+    prompt_opts=( percent subst )
+
+    return 0
+}
+
+[[ -o kshautoload ]] || prompt_valodim_setup "$@"

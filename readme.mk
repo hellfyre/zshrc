@@ -10,6 +10,7 @@ Interesting keybindings:
         ^O insert line from stack
         ^T undo
         ^R prepend "sudo "
+        ^X^X copy $BUFFER to clipboard using xclip
         ctrl-left/right will move along argument boundaries
         repeated ... will be turned into ../.. (mikachu's rationalise-dots)
 
@@ -41,6 +42,13 @@ Interesting keybindings:
 
 My Prompt:
 
+  See https://github.com/Valodim/zsh-prompt-powerline
+
+  I am at this point usually using my powerline prompt and this old one as a
+  fallback if a powerline patched font is unavailable. Just keeping this info
+  here for reference.
+
+
       [valodim@SteelHooves] ::1 ~/.zsh/custom master¹² 1 ±
            ^       ^        ^^^    ^     ^      ^   ^^ ^ ^
            a       b        cde    f     g      h   ij k l
@@ -67,10 +75,10 @@ My Prompt:
 Tidbits:
  - on urxvt, the cursor will become red when in vi normal mode
  - the hostname color in the prompt is generated from a hash
+ - cd completion will display the number of regular files in the current dir
+ - using .. to go up directories will display the absolute path below the prompt
 
 Caveats:
  - doesn't work well without 256 colors
  - doesn't work well for people who are not me
  - probably requires a newish zsh
- - there are a couple remainders from omz (particularly in /lib), too lazy to
-   get rid of those
