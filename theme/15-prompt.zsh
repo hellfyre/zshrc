@@ -31,18 +31,14 @@ function valodim_precmd {
 }
 
 function lprompt {
-    local user=""
-    if [[ "$(whoami)" != "valodim" ]]; then
-      user="%(!.%F{red}root%f@.%n@)"
-    fi
+    user="%(!.%F{red}root%f@.%n@)"
 
-    # hide username if it's my regular one
     if [[ -n $hostcolors[$HOST] ]]; then
       local host_color="${hostcolors[$HOST]}"
     else
       local host_color=$FG[$(t2cc $HOST)] #$'\e'"[`$ZSH/t2cc $HOSTNAME`m"
     fi
-    local host="%{${host_color}%}%M%f"
+    local host="%{${host_color}%}%M%{$reset_color%}"
 
     local shlvl="%(4L.%L .)"
     local exstat="%(?..%B%F{red}%?)"
