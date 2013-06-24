@@ -70,7 +70,8 @@ zstyle ':completion:*:*:*:users' ignored-patterns \
         avahi backup messagebus beagleindex debian-tor dhcp dnsmasq fetchmail\
         firebird gnats haldaemon hplip irc klog list man cupsys postfix\
         proxy syslog www-data mldonkey sys snort debian-spamd kernoops rtkit\
-        root pulse speech-dispatcher
+        root pulse speech-dispatcher colord whoopsie libvirt-dnsmasq saned\
+        libvirt-qemu lightdm usbmux libuuid
 
 zstyle ':completion:*:*:cs:*' file-patterns \
   '*(-/):directories'
