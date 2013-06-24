@@ -68,7 +68,8 @@ zstyle ':completion:*:*:*:users' ignored-patterns \
         rpc rpcuser rpm shutdown squid sshd sync uucp vcsa xfs avahi-autoipd\
         avahi backup messagebus beagleindex debian-tor dhcp dnsmasq fetchmail\
         firebird gnats haldaemon hplip irc klog list man cupsys postfix\
-        proxy syslog www-data mldonkey sys snort
+        proxy syslog www-data mldonkey sys snort debian-spamd kernoops rtkit\
+        root pulse speech-dispatcher
 
 zstyle ':completion:*:*:cs:*' file-patterns \
   '*(-/):directories'

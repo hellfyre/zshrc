@@ -8,12 +8,7 @@ autoload promptinit ; promptinit
 [[ $USER == valodim ]] && zstyle ':prompt:*:ps1' hide-user 1
 
 # couple of fixed custom hostname colors
-zstyle ':prompt:*:twilight*'    host-color 093
-zstyle ':prompt:*:pinkie*'      host-color 201
-zstyle ':prompt:*:rarity'       host-color white
-zstyle ':prompt:*:applejack'    host-color 208
-zstyle ':prompt:*:fluttershy'   host-color 226
-zstyle ':prompt:*:SteelHooves'  host-color 245
+zstyle ':prompt:*:tartaros*'    host-color blue
 
 # check-for-changes can be really slow. I WANT IT though :P
 zstyle ':vcs_info:*' check-for-changes true
