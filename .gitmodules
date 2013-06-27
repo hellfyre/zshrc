@@ -25,6 +25,7 @@
 [submodule "subs/gistpaste"]
 	path = subs/gistpaste
 	url = https://github.com/dblevins/gistpaste.git
+  ignore = dirty
 [submodule "subs/git-annex-zsh-completion"]
 	path = subs/git-annex-zsh-completion
 	url = git://github.com/esc/git-annex-zsh-completion.git
