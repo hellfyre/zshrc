@@ -9,6 +9,8 @@ autoload promptinit ; promptinit
 
 # couple of fixed custom hostname colors
 zstyle ':prompt:*:tartaros*'    host-color blue
+zstyle ':prompt:*:chaos*'       host-color red
+zstyle ':prompt:*:cupcake*'     host-color green
 
 # check-for-changes can be really slow. I WANT IT though :P
 zstyle ':vcs_info:*' check-for-changes true
