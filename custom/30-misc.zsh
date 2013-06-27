@@ -32,8 +32,8 @@ autoload -U zargs
 autoload -U zmv
 
 # add less -F capabilities to grep
-grep() {
-    command grep "$@" | less -F
-}
+#grep() {
+#    command grep "$@" | less -F
+#}
 
 autoload -U :h
