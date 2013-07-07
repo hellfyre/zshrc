@@ -202,10 +202,14 @@ bindkey -M viins jj vi-cmd-mode-samepos
     if zmodload zsh/terminfo && (( $+terminfo )); then
 
         function zle-line-init () {
-            echoti smkx
+            if (( ${+terminfo[smkx]} )); then
+                echoti smkx
+            fi
         }
         function zle-line-finish () {
-            echoti rmkx
+            if (( ${+terminfo[rmkx]} )); then
+                echoti rmkx
+            fi
         }
         zle -N zle-line-init
         zle -N zle-line-finish
